@@ -1,3 +1,3 @@
-from domain.run import RunRequest, RunResponse
+from domain.scan import ScanCreateData, ScanDetailData, ScanStatusData
 
-__all__ = ["RunRequest", "RunResponse"]
+__all__ = ["ScanCreateData", "ScanDetailData", "ScanStatusData"]

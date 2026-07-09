@@ -1,4 +1,13 @@
+from typing import TypedDict
+
 from config.settings import get_settings
+
+
+class LLMResult(TypedDict):
+    text: str
+    input_tokens: int
+    output_tokens: int
+    model: str
 
 
 def _make_provider():
@@ -19,7 +28,9 @@ def _make_provider():
 
     if provider == "anthropic":
         from llm.providers.anthropic import AnthropicProvider
-        return AnthropicProvider(api_key=s.anthropic_api_key, model=s.llm_model)
+        return AnthropicProvider(
+            api_key=s.anthropic_api_key, model=s.llm_model, max_tokens=s.llm_max_tokens
+        )
     if provider == "gemini":
         from llm.providers.gemini import GeminiProvider
         return GeminiProvider(api_key=s.gemini_api_key, model=s.llm_model)
@@ -31,5 +42,5 @@ class LLMClient:
     def __init__(self) -> None:
         self._provider = _make_provider()
 
-    def call_model(self, prompt: str, *, system: str | None = None) -> str:
+    def call_model(self, prompt: str, *, system: str | None = None) -> LLMResult:
         return self._provider.call_model(prompt, system=system)

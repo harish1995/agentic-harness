@@ -2,10 +2,13 @@ import structlog
 
 
 def configure_logging(log_level: str = "INFO") -> None:
+    # Pure-structlog setup (PrintLoggerFactory, not stdlib logging) — deliberately
+    # uses structlog.processors.add_log_level rather than structlog.stdlib.add_log_level
+    # / add_logger_name, which assume a stdlib logging.Logger (with a `.name`
+    # attribute) and raise AttributeError against a plain PrintLogger.
     structlog.configure(
         processors=[
-            structlog.stdlib.add_log_level,
-            structlog.stdlib.add_logger_name,
+            structlog.processors.add_log_level,
             structlog.processors.TimeStamper(fmt="iso"),
             structlog.processors.JSONRenderer(),
         ],
