@@ -139,7 +139,7 @@ def parse_findings_json(text: str, *, category_source: str) -> list[Finding]:
     cleaned = _CODE_FENCE_RE.sub("", text).strip()
 
     try:
-        parsed = json.loads(cleaned)
+        parsed, _end_idx = json.JSONDecoder().raw_decode(cleaned)
     except json.JSONDecodeError as exc:
         raise ValueError(
             f"{category_source}: LLM response was not valid JSON: {exc}. "
@@ -222,7 +222,7 @@ def parse_verification_decisions(text: str) -> list[dict]:
     cleaned = _CODE_FENCE_RE.sub("", text).strip()
 
     try:
-        parsed = json.loads(cleaned)
+        parsed, _end_idx = json.JSONDecoder().raw_decode(cleaned)
     except json.JSONDecodeError as exc:
         raise ValueError(
             f"verify_findings: LLM response was not valid JSON: {exc}. "
